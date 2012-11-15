@@ -4,6 +4,7 @@ import tweepy
 import webbrowser
 import pickle
 import random
+import nltk
 from collections import defaultdict
 
 def get_files(path):
@@ -34,14 +35,24 @@ def user_location(t):
   return None
 
 def mentions_obama(tweet):
-  if "obama" in tweet.text.lower() or "barrack" in tweet.text.lower():
-    return True
-  return False
+  if type(tweet) is str:
+    if "obama" in tweet.lower() or "barrack" in tweet.lower():
+      return True
+    return False
+  else:
+    if "obama" in tweet.text.lower() or "barrack" in tweet.text.lower():
+      return True
+    return False
 
 def mentions_romney(tweet):
-  if "romney" in tweet.text.lower() or "mitt" in tweet.text.lower():
-    return True
-  return False
+  if type(tweet) is str:
+    if "romney" in tweet.lower() or "mitt" in tweet.lower():
+      return True
+    return False
+  else:
+    if "romney" in tweet.text.lower() or "mitt" in tweet.text.lower():
+      return True
+    return False
 
 def split_tweets(tweets):
   obama_tweets = []
@@ -96,6 +107,17 @@ def create_labelled_data(all_tweets, input_fname, output_fname, num_to_label):
   labelled_tweets += label_tweets(both_tweets, num_to_label)
   labelled_tweets += label_tweets(none_tweets, num_to_label)
   print_labelled_data(labelled_tweets)
+
+def get_words_in_tweets(tweets):
+    all_words = []
+    for (words, sentiment) in tweets:
+      all_words.extend(words)
+    return all_words
+
+def get_word_features(wordlist):
+    wordlist = nltk.FreqDist(wordlist)
+    word_features = wordlist.keys()
+    return word_features
 
   
   
