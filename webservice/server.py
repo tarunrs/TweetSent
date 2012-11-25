@@ -8,7 +8,7 @@ import pickle
 import os
 from tornado.options import define, options
 import logging
-
+from sentiment import *
 define("mysql_host", default="127.0.0.1", help="blog database host")
 define("mysql_database", default="tweets", help="blog database name")
 define("mysql_user", default="root", help="blog database user")
@@ -22,15 +22,18 @@ class Application(tornado.web.Application):
             (r"/map", MapHandler),
             (r"/set_label", SetLabelHandler),
             (r"/get_contextual_tweets", GetContextHandler),
+            (r"/get_sentiment", GetSentimentHandler),
             (r"/get_tweet", GetTweetHandler),
-            (r"/js/jquery.js", JQueryHandler),
+#            (r"/js/jquery.js", JQueryHandler),
             (r"/set_nickname", SetNicknameHandler),
-            (r"/js/jquery-jvectormap-1.1.1.min.js", JQueryJVectorHandler),
-            (r"/js/states.js", StatesHandler),
-            (r"/js/jquery-jvectormap-us-lcc-en.js", JQueryJVectorUSHandler),
+#            (r"/js/jquery-jvectormap-1.1.1.min.js", JQueryJVectorHandler),
+#            (r"/js/states.js", StatesHandler),
+#            (r"/js/jquery-jvectormap-us-lcc-en.js", JQueryJVectorUSHandler),
+#            (r"/css/jquery-jvectormap-1.1.1.css", CSSHandler),
         ]
         settings = dict(static_path = os.path.join(os.path.dirname(__file__), "static"))
         self.transcript = open("data/subtitles.processed").readlines()
+        self.sentiment_analyzer = Sentiment()
         tornado.web.Application.__init__(self, handlers, **settings)
         self.db = tornado.database.Connection(
         host=options.mysql_host, database=options.mysql_database,
@@ -43,31 +46,27 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def transcript(self):
         return self.application.transcript
+    @property
+    def sentiment_analyzer(self):
+        return self.application.sentiment_analyzer
 
+class GetSentimentHandler(BaseHandler):
+    def get(self):
+        time_interval = int(self.get_argument("time_interval"))
+        ret = self.sentiment_analyzer.get_sentiments(time_interval)
+        self.write(tornado.escape.json_encode(ret))
 
 class MainHandler(BaseHandler):
     def get(self):
-        self.render("html/index.html")
+        self.render("static/html/index.html")
 
 class MapHandler(BaseHandler):
     def get(self):
-        self.render("html/map.html")
-
-class JQueryHandler(BaseHandler):
-    def get(self):
-        self.render("js/jquery.js")
-
-class JQueryJVectorHandler(BaseHandler):
-    def get(self):
-        self.render("js/jquery-jvectormap-1.1.1.min.js")
+        self.render("static/html/map.html")
 
 class StatesHandler(BaseHandler):
     def get(self):
         self.render("js/states.js")
-
-class JQueryJVectorUSHandler(BaseHandler):
-    def get(self):
-        self.render("js/jquery-jvectormap-us-lcc-en.js")
 
 class GetContextHandler(BaseHandler):
     def get(self):
@@ -104,7 +103,7 @@ class GetContextHandler(BaseHandler):
       context = self.transcript[time_interval]
       similarity = self.get_most_similar_tweet(time_interval, context)
       similarity.sort(key=lambda tup: tup[0], reverse=True)
-      op_text = context + "<br><br>"
+      op_text = [] #context + "<br><br>"
       #sim_text = [ s[1] for s in similarity[0:num_tweets]]
       sim_text = []
       index = 0
@@ -117,10 +116,13 @@ class GetContextHandler(BaseHandler):
 
       for st in sim_text:
         try:
-          op_text += st + "<br>"
+          op_text.append(st)
         except:
           pass
-      return op_text
+      ret = dict()
+      ret['transcript'] = context
+      ret['context'] = op_text
+      return ret
 
         
 

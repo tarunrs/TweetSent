@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="static/js/jquery.js"></script>    
+
+    <script>
+
+	jQuery(document).ready(function(){
+            jQuery("#obama").click(function () {
+    	      jQuery(".tweetcontent").fadeOut("fast");
+              UpdateLabel(1);
+              GetTweet();
+              ValidateVote();
+              Sleep(100) ;
+    	      jQuery(".tweetcontent").fadeIn("slow");
+   	 });
+    	    jQuery("#romney").click(function () {
+    	      jQuery(".tweetcontent").fadeOut("fast");
+              UpdateLabel(2);
+              GetTweet();
+              ValidateVote();
+              Sleep(100) ;
+    	      jQuery(".tweetcontent").fadeIn("slow");
+
+   	 });
+
+	    jQuery("#none").click(function () {
+    	      jQuery(".tweetcontent").fadeOut("fast");
+              UpdateLabel(3);
+              GetTweet();
+              ValidateVote();
+              Sleep(100) ;
+    	      jQuery(".tweetcontent").fadeIn("slow");
+
+   	 });
+         GetTweet();
+       });
+     function ValidateVote(){
+       var affirmation = new Array("Excellent!!", "That would have been my choice too!", "Interesting!", "Righteous!", "Winning!", "Like your vote, I do", "Note Silver is modiying his models based on just that vote!", "Note Silver has a whole variable for you!", "Jeff Dean is adding new constraints to the database to accomodate that vote!", "Jeff Dean is manually recording your votes!", "No machine can replace your vote!", "Live long and prosper!", "I dont normally follow politics, but when I do, Its becausse you vote!", "I can haz more votes?", "Votes. Votes everywhere", "Good job!", "*rimshot*", "Interesting", "Hmmmm..", "You validate me", "*whistles*", "Point noted", "Chuck Norris has nothing on your voting skills", "Mad Skillz bro", "I see what you did there", "Roger that!", "Alrighty!");
+      index = Math.floor((Math.random()*25)+1);
+      jQuery(".affirmative").text(affirmation[index]) ;
+     }
+ 
+     function UpdateCounter() {
+        t_count = jQuery(".tweetcounter").text() ;
+        jQuery(".tweetcounter").text(parseInt(t_count) + 1) 
+        l_count = jQuery(".levelcounter").text() ;
+        p_complete = (t_count * 100) /(10 * Math.pow(2, l_count));
+        if (p_complete == 100){
+          alert("Complete. Level up!");
+          jQuery(".levelcounter").text(parseInt(l_count) + 1) 
+          p_complete = (t_count * 100) /(10 * Math.pow(2, parseInt(l_count) + 1));
+          jQuery(".progressBar").text(p_complete+"%") ;
+        }else{
+            jQuery(".progressBar").text(p_complete+"%") ;
+        }    
+     }
+
+     function DisplayTweet(result) {
+        res = jQuery.parseJSON(result);
+        jQuery(".tweetcontent").text(res.text) ;
+        jQuery(".tweetcontent").attr('id', res.id) ;
+     }
+     function UpdateLabel(choice) {
+    	var tweetid = jQuery(".tweetcontent").attr('id');
+    	jQuery.ajax({
+        	url: "http://localhost:8888/set_label",
+        	data: { tweetid: tweetid, label: choice }, // parameter map
+        	type: "GET", // data has to be POSTed    	        
+                async: true,
+        	success: function (result) {
+        	    //DisplayTweet(result);
+        	},
+	        error: function (xhr, status) {
+        	    alert(status + "\r\n" + xhr.responseText);
+	        }
+	    });
+	};
+
+     function GetTweet() {
+	    jQuery.ajax({
+        	url: "http://localhost:8888/get_tweet",
+        	type: "GET", // data has to be POSTed    	        
+	        success: function (result) {
+        	    DisplayTweet(result);
+	        },
+	        error: function (xhr, status) {
+	            alert(status + "\r\n" + xhr.responseText);
+        	}
+	    });
+	};
+    </script>
+
+    <style>
+        body {font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: 200;  color: #333; background-color: rgb(14,37,54); ) repeat-x scroll center 55px transparent; align: center}
+       .choice { cursor:pointer; width: 30%; float: left; text-align: center; margin: 3px;}
+       .obama { background-color: rgb(0,153,204); color: #FFF;}
+       .romney { background-color: rgb(233,29,14); color: #FFF;}
+       .none { background-color: rgb(15,15,15); color: #FFF;}
+       .choices { width:100%;}
+       .tweet {width:400px; text-align: center; color: #FFF; align: center;}
+       .center{margin-left:auto; margin-right:auto; width:50%;}
+       .addpadding {margin-top: 30px; margin-bottom: 30px;}
+       .tweetcontent {text-align: center; color: #fff; padding: 10px; height: 80px;}
+       .main {padding: 50px; vertical-align:middle;}
+       .container {height: 100%; width: 100%;}
+       .directions {width: 100%; float: left; font-size: 12px; color: #AAA;  }
+       .levelindicator {font-size: 14px; color: #AAA;  }
+       .progressBar {font-size: 14px; color: #AAA;  }
+       .tweetcounter { visibility: hidden;}
+       .levelcounter { }
+       .affirmationtext {font-size: 18px; color: #FFF; text-align: center; }
+
+    </style>
+   <div class="container">
+   <div class = "main center"> 
+      <div class="headerimage center addpadding"> 
+        <center><img src="https://election.twitter.com/img/logo.png"> </center>
+      </div>
+
+     <div class="tweetcontent center addpadding" id ='1'>
+         Have you ever wondered exactly WHAT the Beast from Beauty and the Beast is SUPPOSED to be? Read on! --> http://ow.ly/f6TXj 
+     </div>
+
+     <div class="choices center addpadding">
+        <div id="obama" class="choice obama">
+          Obama
+        </div>
+        <div id="romney" class="choice romney">
+          Romney
+        </div>
+        <div id="none" class="choice none">
+          Skip
+        </div>
+     </div>
+     <div class="directions center addpadding">
+       <center>Please select whether the tweet was Pro-Obama or Pro-Romney. 'Skip' if you are unsure.</center>
+     </div>
+     <div class = "center addpadding affirmationtext">
+        Hello there!
+     </div>
+   </div>
+   </div>
+  </body>
+</html>

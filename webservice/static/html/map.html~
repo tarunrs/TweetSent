@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Demo</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="static/js/jquery.js"></script>    
+    <script src="static/js/jquery-ui-1.9.2.custom.js"></script>
+    <script src="static/js/jquery-jvectormap-1.1.1.min.js"></script>
+    <script src="static/js/states.js"></script>
+    <script type="text/javascript" src="static/js/jquery-jvectormap-us-lcc-en.js"></script>    
+    <link href="static/css/ui-lightness/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+
+
+
+    <script>	
+       function InitSentiment() {
+    	  jQuery.ajax({
+          	url: "http://localhost:8888/get_sentiment",
+        	data: { time_interval: 1 }, // parameter map
+        	type: "GET", // data has to be POSTed    	        
+                async: true,
+        	success: function (result) {
+        	    InitMap(result);
+        	},
+	        error: function (xhr, status) {
+        	    alert(status + "\r\n" + xhr.responseText);
+	        }
+	    });
+	};
+       function UpdateSentiment(time_interval) {
+    	  jQuery.ajax({
+          	url: "http://localhost:8888/get_sentiment",
+        	data: { time_interval: time_interval }, // parameter map
+        	type: "GET", // data has to be POSTed    	        
+                async: true,
+        	success: function (result) {
+        	    UpdateMap(result);
+        	},
+	        error: function (xhr, status) {
+        	    alert(status + "\r\n" + xhr.responseText);
+	        }
+	    });
+	};
+       function UpdateContext(time_interval) {
+    	  jQuery.ajax({
+          	url: "http://localhost:8888/get_contextual_tweets",
+        	data: { time_interval: time_interval, num_tweets : 5 }, // parameter map
+        	type: "GET", // data has to be POSTed    	        
+                async: true,
+        	success: function (result) {
+        	    SetContext(result);
+        	},
+	        error: function (xhr, status) {
+        	    alert(status + "\r\n" + xhr.responseText);
+	        }
+	    });
+	};
+
+       function InitMap(result){
+         res = jQuery.parseJSON(result);
+          $('#map').vectorMap({
+              map: 'us_lcc_en',
+              backgroundColor : '#f5f5f5',
+              series: {
+                 regions: [{
+                       values: res.states,
+                       scale: ['#CC0033', '#0071A4'],
+                       normalizeFunction: 'linear'
+                      }]
+              }
+         });
+       };
+      function UpdateMap(result){
+          var mapObject = $('#map').vectorMap('get', 'mapObject');
+          res = jQuery.parseJSON(result);
+          mapObject.series.regions[0].setValues(res.states);
+         };
+      
+     function SetContext(result){
+            res = jQuery.parseJSON(result);
+            jQuery("#transcript").text(res.transcript) ;
+            var txt =""
+            for (var i = 0; i < res.context.length; i++)
+              {
+               id = "#context" + i 
+               jQuery(id).text(res.context[i] ) ;
+
+              }     
+         };
+
+      jQuery(document).ready(function(){
+        InitSentiment(1);
+        UpdateContext(1);
+        $(".slider").slider({
+           range: false,
+           value: 0,
+           min: 0,
+           max: 30,
+           step: 1,
+           change: function( event, ui ) {
+              val = ui.value;
+              UpdateContext(ui.value);
+              UpdateSentiment(ui.value);
+            }
+         });
+      });
+    </script>
+    <link rel="stylesheet" media="all" href="static/css/jquery-jvectormap-1.1.1.css"/>
+    <style>
+        body {font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: 200;  color: #000000; background-color: #f5f5f5; }
+       .context {color: #000; font-size: 12px;}
+       .sectionheader {color: #000; font-size: 14px; font-weight:200;}
+       .center{margin-left:auto; margin-right:auto; width:50%;}
+       .addpadding {margin-top: 30px; margin-bottom: 30px;}
+       .tweetpadding {margin-top: 15px; margin-bottom: 15px; padding-left: 15px;}
+       .tweetcontent {text-align: center; color: #fff; padding: 10px; height: 80px;}
+       .main {padding: 50px; vertical-align:middle;}
+       .container {height: 100%; width: 100%;}
+       .jvectormap-container {background-color: rgb(14,37,54);}
+    </style>
+
+
+    <div class="container">
+      <div style="width: 708px; height: 400px" id = "map" class="center map jvectormap jvectormap-lcc" data-projection="lcc" data-name="us_lcc_en"></div>
+      <div style = "center addpadding"> 
+           <div class="slider" id = "slider" style="width: 708px; margin: auto"></div>
+      </div>
+      <div class="center addpadding transcript" id="transcript"> Transcript</div>
+      <div class="center tweetpadding sectionheader" id="contextheader"> Contextual Tweets</div>
+      <div class="contextcontainer tweetpadding">
+        <div class="center tweetpadding context" id="context0"> Transcript</div>
+        <div class="center tweetpadding context" id="context1"> Transcript</div>
+        <div class="center tweetpadding context" id="context2"> Transcript</div>
+        <div class="center tweetpadding context" id="context3"> Transcript</div>
+        <div class="center tweetpadding context" id="context4"> Transcript</div>
+     </div>
+    </div>
+  </body>
+</html>
+

@@ -12,7 +12,7 @@ def get_location(raw_location, i):
   params = {'address' : raw_location, 'sensor' : 'false'}
   params_encoded  = urllib.urlencode(params)
   url_req =  'http://maps.googleapis.com/maps/api/geocode/json?' + params_encoded
-  sleep(0.1)
+  sleep(0.5)
   res = urllib.urlopen(url_req)
   j = json.loads(res.read())
   state_code = "NOT_US"
@@ -43,7 +43,7 @@ def get_location(raw_location, i):
   return state_code
 
 
-for i in range(3, 91):
+for i in range(32, 91):
   input_file_path = "/home/tarun/school/arnab/datasets/elections/for_context_split_by_time/" + str(i)
   output_file_path = "/home/tarun/school/arnab/datasets/elections/states_labelled/" + str(i)
   
