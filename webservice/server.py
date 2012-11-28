@@ -8,7 +8,7 @@ import pickle
 import os
 from tornado.options import define, options
 import logging
-from sentiment import *
+from sentiment_alt import *
 define("mysql_host", default="127.0.0.1", help="blog database host")
 define("mysql_database", default="tweets", help="blog database name")
 define("mysql_user", default="root", help="blog database user")

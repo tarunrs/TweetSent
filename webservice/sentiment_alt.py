@@ -50,6 +50,21 @@ class Sentiment():
     f.write("".join(feature_vecs))
     f.close()
 
+  def evaluate_results(self, tweets):
+    obama_predictions = open("svm/tmp/obama.prediction", "r").readlines()
+    romney_predictions = open("svm/tmp/romney.prediction", "r").readlines()
+    pos_tweets = []
+    neg_tweets = []
+    for i in range(len(obama_predictions)):
+      p = float(obama_predictions[i].strip()) + float(romney_predictions[i].strip())
+      if p > 0.0:
+        print tweets[i].text      
+        pos_tweets.append((p, tweets[i]))
+      else:
+#        print tweets[i].text
+        neg_tweets.append((p, tweets[i]))
+    return (pos_tweets, neg_tweets)
+
   def split_results(self, tweets, predicted_file):
     predictions = open(predicted_file, "r")
     pos_tweets = []
@@ -85,10 +100,13 @@ class Sentiment():
     op_feature_vector_file.close()
     os.system('svm/svm_classify svm/tmp/'+str(time_interval)+'.svm svm/models/obama.neutral.model svm/tmp/obama.prediction')
     os.system('svm/svm_classify svm/tmp/'+str(time_interval)+'.svm svm/models/romney.neutral.model svm/tmp/romney.prediction')
-    os.system('svm/svm_classify svm/tmp/'+str(time_interval)+'.svm svm/models/obama.romney.neutral.model svm/tmp/obama.romney.neutral.prediction')
-    self.generate_ensemble_file()
-    os.system('svm/svm_classify svm/tmp/ensemble.svm svm/models/ensemble.model svm/tmp/ensemble.prediction')
-    split_tweets = self.split_results(tweets, "svm/tmp/ensemble.prediction")
+#    os.system('svm/svm_classify svm/tmp/'+str(time_interval)+'.svm svm/models/obama.romney.neutral.model svm/tmp/obama.romney.neutral.prediction')
+#    self.evaluate_predictions()
+#    os.system('svm/svm_classify svm/tmp/ensemble.svm svm/models/ensemble.model svm/tmp/ensemble.prediction')
+#    split_tweets = self.split_results(tweets, "svm/tmp/ensemble.prediction")
+#    positive_tweets = split_tweets[0]
+#    neutral_tweets = split_tweets[1]
+    split_tweets = self.evaluate_results(tweets)
     positive_tweets = split_tweets[0]
     neutral_tweets = split_tweets[1]
     classified_tweets = self.classify_tweets(positive_tweets)

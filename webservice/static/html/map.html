@@ -59,13 +59,28 @@
 	};
 
        function InitMap(result){
-         res = jQuery.parseJSON(result);
+          resm = jQuery.parseJSON(result);
+          for (var i = 0; i < resm.tweets.neutral.length; i++)
+              {
+               id = "#neutral" + i 
+               jQuery(id).text(resm.tweets.neutral[i][0] ) ;
+              }     
+          for (var i = 0; i < resm.tweets.obama.length; i++)
+              {
+               id = "#obama" + i 
+               jQuery(id).text(resm.tweets.obama[i][0] ) ;
+              }
+          for (var i = 0; i < resm.tweets.romney.length; i++)
+              {
+               id = "#romney" + i 
+               jQuery(id).text(resm.tweets.romney[i][0] ) ;
+              }
           $('#map').vectorMap({
               map: 'us_lcc_en',
               backgroundColor : '#f5f5f5',
               series: {
                  regions: [{
-                       values: res.states,
+                       values: resm.states,
                        scale: ['#CC0033', '#0071A4'],
                        normalizeFunction: 'linear'
                       }]
@@ -74,8 +89,23 @@
        };
       function UpdateMap(result){
           var mapObject = $('#map').vectorMap('get', 'mapObject');
-          res = jQuery.parseJSON(result);
-          mapObject.series.regions[0].setValues(res.states);
+          resm = jQuery.parseJSON(result);
+          mapObject.series.regions[0].setValues(resm.states);
+          for (var i = 0; i < resm.tweets.neutral.length; i++)
+              {
+               id = "#neutral" + i 
+               jQuery(id).text(resm.tweets.neutral[i][0] ) ;
+              }     
+          for (var i = 0; i < resm.tweets.obama.length; i++)
+              {
+               id = "#obama" + i 
+               jQuery(id).text(resm.tweets.obama[i][0] ) ;
+              }
+          for (var i = 0; i < resm.tweets.romney.length; i++)
+              {
+               id = "#romney" + i 
+               jQuery(id).text(resm.tweets.romney[i][0] ) ;
+              }
          };
       
      function SetContext(result){
@@ -86,7 +116,6 @@
               {
                id = "#context" + i 
                jQuery(id).text(res.context[i] ) ;
-
               }     
          };
 
@@ -136,7 +165,38 @@
         <div class="center tweetpadding context" id="context3"> Transcript</div>
         <div class="center tweetpadding context" id="context4"> Transcript</div>
      </div>
+
+      <div class="center tweetpadding sectionheader" id="proobamaheader"> Pro-Obama Tweets</div>
+      <div class="contextcontainer tweetpadding">
+        <div class="center tweetpadding context" id="obama0"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="obama1"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="obama2"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="obama3"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="obama4"> Loading tweet..</div>
+     </div>
+
+      <div class="center tweetpadding sectionheader" id="proromneyheader"> Pro-Romney Tweets</div>
+      <div class="contextcontainer tweetpadding">
+        <div class="center tweetpadding context" id="romney0"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="romney1"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="romney2"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="romney3"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="romney4"> Loading tweet..</div>
+     </div>
+
+      <div class="center tweetpadding sectionheader" id="neutralheader"> Neutral/Unclassified Tweets</div>
+      <div class="contextcontainer tweetpadding">
+        <div class="center tweetpadding context" id="neutral0"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="neutral1"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="neutral2"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="neutral3"> Loading tweet..</div>
+        <div class="center tweetpadding context" id="neutral4"> Loading tweet..</div>
+     </div>
+
+
+
     </div>
+
   </body>
 </html>
 
