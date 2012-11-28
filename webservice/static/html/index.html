@@ -68,7 +68,7 @@
      function UpdateLabel(choice) {
     	var tweetid = jQuery(".tweetcontent").attr('id');
     	jQuery.ajax({
-        	url: "http://localhost:8888/set_label",
+        	url: "http://tarunrs.com:8888/set_label",
         	data: { tweetid: tweetid, label: choice }, // parameter map
         	type: "GET", // data has to be POSTed    	        
                 async: true,
@@ -83,7 +83,7 @@
 
      function GetTweet() {
 	    jQuery.ajax({
-        	url: "http://localhost:8888/get_tweet",
+        	url: "http://tarunrs.com:8888/get_tweet",
         	type: "GET", // data has to be POSTed    	        
 	        success: function (result) {
         	    DisplayTweet(result);

@@ -87,6 +87,23 @@
               }
          });
        };
+      function NullifyTexts(){
+          for (var i = 0; i < 5; i++)
+              {
+               id = "#neutral" + i 
+               jQuery(id).text("Loading tweet...") ;
+               id = "#obama" + i 
+               jQuery(id).text("Loading tweet...") ;
+               id = "#romney" + i 
+               jQuery(id).text("Loading tweet...") ;
+               id = "#context" + i 
+               jQuery(id).text("Loading tweet...") ;
+               id = "#transcript" 
+               jQuery(id).text("Loading transcript...") ;
+
+
+              }     
+      }
       function UpdateMap(result){
           var mapObject = $('#map').vectorMap('get', 'mapObject');
           resm = jQuery.parseJSON(result);
@@ -130,6 +147,7 @@
            step: 1,
            change: function( event, ui ) {
               val = ui.value;
+              NullifyTexts();
               UpdateContext(ui.value);
               UpdateSentiment(ui.value);
             }
