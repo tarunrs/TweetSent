@@ -17,7 +17,7 @@
     <script>	
        function InitSentiment() {
     	  jQuery.ajax({
-          	url: "http://localhost:8888/get_sentiment",
+          	url: "http://tarunrs.com:8888/get_sentiment",
         	data: { time_interval: 1 }, // parameter map
         	type: "GET", // data has to be POSTed    	        
                 async: true,
@@ -31,7 +31,7 @@
 	};
        function UpdateSentiment(time_interval) {
     	  jQuery.ajax({
-          	url: "http://localhost:8888/get_sentiment",
+          	url: "http://tarunrs.com:8888/get_sentiment",
         	data: { time_interval: time_interval }, // parameter map
         	type: "GET", // data has to be POSTed    	        
                 async: true,
@@ -45,7 +45,7 @@
 	};
        function UpdateContext(time_interval) {
     	  jQuery.ajax({
-          	url: "http://localhost:8888/get_contextual_tweets",
+          	url: "http://tarunrs.com:8888/get_contextual_tweets",
         	data: { time_interval: time_interval, num_tweets : 5 }, // parameter map
         	type: "GET", // data has to be POSTed    	        
                 async: true,
