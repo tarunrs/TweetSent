@@ -100,6 +100,7 @@ class GetContextHandler(BaseHandler):
       return sims
 
     def get_contextual_tweets(self, time_interval, num_tweets):
+      censored_words = ["fuck", "nigga", "motherfucker", "nigga", "nigger", "ass", "asshole", "cunt", "bitch", "dick", "cock"]
       context = self.transcript[time_interval]
       similarity = self.get_most_similar_tweet(time_interval, context)
       similarity.sort(key=lambda tup: tup[0], reverse=True)
@@ -113,6 +114,8 @@ class GetContextHandler(BaseHandler):
           sim_text.append(similarity[index][1])
           cnt += 1
         index +=1   
+      for censored_word in censored_words:
+        sim_text = [t.lower().replace(censored_word, "*bleep*") for t in sim_text ]
 
       for st in sim_text:
         try:

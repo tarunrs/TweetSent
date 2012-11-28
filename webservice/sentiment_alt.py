@@ -58,7 +58,7 @@ class Sentiment():
     for i in range(len(obama_predictions)):
       p = float(obama_predictions[i].strip()) + float(romney_predictions[i].strip())
       if p > 0.0:
-        print tweets[i].text      
+        #print tweets[i].text      
         pos_tweets.append((p, tweets[i]))
       else:
 #        print tweets[i].text
@@ -86,7 +86,7 @@ class Sentiment():
     return self.split_results(tweets, "svm/tmp/classified.prediction")
 
   def get_sentiments(self, time_interval):
-    censored_words = ["fuck", "nigga", "motherfucker", "nigga", "nigger", "ass", "asshole", "cunt", "bitch"]
+    censored_words = ["fuck", "nigga", "motherfucker", "nigga", "nigger", "ass", "asshole", "cunt", "bitch", "dick", "cock"]
     time_interval = time_interval + 2
     states_counts = dict()
     states = ['US-AK', 'US-AL', 'US-AR', 'US-AS', 'US-AZ', 'US-CA', 'US-CO', 'US-CT', 'US-DC', 'US-DE', 'US-FL', 'US-GA', 'US-GU', 'US-HI', 'US-IA', 'US-ID', 'US-IL', 'US-IN', 'US-KS', 'US-KY', 'US-LA', 'US-MA', 'US-MD', 'US-ME', 'US-MH', 'US-MI', 'US-MN', 'US-MO', 'US-MP', 'US-MS', 'US-MT', 'US-NC', 'US-ND', 'US-NE', 'US-NH', 'US-NJ', 'US-NM', 'US-NOT_US', 'US-NV', 'US-NY', 'US-OH', 'US-OK', 'US-OR', 'US-PA', 'US-RI', 'US-SC', 'US-SD', 'US-TN', 'US-TX', 'US-Twin Cities', 'US-UT', 'US-VA', 'US-VI', 'US-VT', 'US-WA', 'US-WI', 'US-WV', 'US-WY']
