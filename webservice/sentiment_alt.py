@@ -4,8 +4,8 @@ import os
 from collections import defaultdict
 class Sentiment():
   def __init__(self):
-    #self.HOME_DIR = "/home/tarun/git/TweetSent/webservice/"
-    self.HOME_DIR = "/root/server/webservice/"
+    self.HOME_DIR = "/home/tarun/git/TweetSent/webservice/"
+    #self.HOME_DIR = "/root/server/webservice/"
     pass
 
   def get_feature_vectors(self, tweets):
@@ -112,9 +112,9 @@ class Sentiment():
     classified_tweets = self.classify_tweets(positive_tweets)
     obama_tweets = classified_tweets[0]
     romney_tweets = classified_tweets[1]
-    obama_tweets.sort(key=lambda tup: tup[0])
-    romney_tweets.sort(key=lambda tup: tup[0])
-    neutral_tweets.sort(key=lambda tup: tup[0])
+    obama_tweets.sort(key=lambda tup: tup[0], reverse=True)
+    romney_tweets.sort(key=lambda tup: tup[0], reverse=True)
+    neutral_tweets.sort(key=lambda tup: tup[0], reverse=True)
     ret = dict()
     ret["obama"] = [(t[1].text, t[0]) for t in obama_tweets[-5:] ]
     ret["romney"]= [(t[1].text, t[0]) for t in romney_tweets[-5:] ]

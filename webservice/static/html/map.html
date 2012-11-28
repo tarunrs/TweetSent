@@ -15,10 +15,10 @@
 
 
     <script>	
-       function InitSentiment() {
+       function InitSentiment(something) {
     	  jQuery.ajax({
-          	url: "http://tarunrs.com:8888/get_sentiment",
-        	data: { time_interval: 1 }, // parameter map
+          	url: "http://localhost:8888/get_sentiment",
+        	data: { time_interval: 0 }, // parameter map
         	type: "GET", // data has to be POSTed    	        
                 async: true,
         	success: function (result) {
@@ -31,7 +31,7 @@
 	};
        function UpdateSentiment(time_interval) {
     	  jQuery.ajax({
-          	url: "http://tarunrs.com:8888/get_sentiment",
+          	url: "http://localhost:8888/get_sentiment",
         	data: { time_interval: time_interval }, // parameter map
         	type: "GET", // data has to be POSTed    	        
                 async: true,
@@ -45,7 +45,7 @@
 	};
        function UpdateContext(time_interval) {
     	  jQuery.ajax({
-          	url: "http://tarunrs.com:8888/get_contextual_tweets",
+          	url: "http://localhost:8888/get_contextual_tweets",
         	data: { time_interval: time_interval, num_tweets : 5 }, // parameter map
         	type: "GET", // data has to be POSTed    	        
                 async: true,
@@ -110,7 +110,7 @@
       
      function SetContext(result){
             res = jQuery.parseJSON(result);
-            jQuery("#transcript").text(res.transcript) ;
+            jQuery("#transcript").text("\"... " + res.transcript + "...\"") ;
             var txt =""
             for (var i = 0; i < res.context.length; i++)
               {
@@ -120,8 +120,8 @@
          };
 
       jQuery(document).ready(function(){
-        InitSentiment(1);
-        UpdateContext(1);
+        InitSentiment(0);
+        UpdateContext(0);
         $(".slider").slider({
            range: false,
            value: 0,
@@ -139,8 +139,12 @@
     <link rel="stylesheet" media="all" href="static/css/jquery-jvectormap-1.1.1.css"/>
     <style>
         body {font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight: 200;  color: #000000; background-color: #f5f5f5; }
-       .context {color: #000; font-size: 12px;}
-       .sectionheader {color: #000; font-size: 14px; font-style:bold;}
+       .obama { background-color: rgb(0,153,204); color: #FFF;}
+       .romney { background-color: rgb(233,29,14); color: #FFF;}
+       .none { background-color: rgb(15,15,15); color: #FFF;}
+       .context {color: #000; font-size: 12px; }
+       .sectionheader {color: #FFF; font-size: 14px; font-weight: bold;}
+       .transcript {color: #000; font-size: 16px; font-weight: bold;}
        .center{margin-left:auto; margin-right:auto; width:50%;}
        .addpadding {margin-top: 30px; margin-bottom: 30px;}
        .tweetpadding {margin-top: 15px; margin-bottom: 15px; padding-left: 15px;}
@@ -157,16 +161,16 @@
            <div class="slider" id = "slider" style="width: 708px; margin: auto"></div>
       </div>
       <div class="center addpadding transcript" id="transcript"> Transcript</div>
-      <div class="center tweetpadding sectionheader" id="contextheader"> Contextual Tweets</div>
+      <div class="center none tweetpadding sectionheader" id="contextheader"> Contextual Tweets</div>
       <div class="contextcontainer tweetpadding">
-        <div class="center tweetpadding context" id="context0"> Transcript</div>
-        <div class="center tweetpadding context" id="context1"> Transcript</div>
-        <div class="center tweetpadding context" id="context2"> Transcript</div>
-        <div class="center tweetpadding context" id="context3"> Transcript</div>
-        <div class="center tweetpadding context" id="context4"> Transcript</div>
+        <div class="center tweetpadding context" id="context0"> Loading tweet... </div>
+        <div class="center tweetpadding context" id="context1"> Loading tweet... </div>
+        <div class="center tweetpadding context" id="context2"> Loading tweet... </div>
+        <div class="center tweetpadding context" id="context3"> Loading tweet... </div>
+        <div class="center tweetpadding context" id="context4"> Loading tweet... </div>
      </div>
 
-      <div class="center tweetpadding sectionheader" id="proobamaheader"> Pro-Obama Tweets</div>
+      <div class="center obama tweetpadding sectionheader" id="proobamaheader"> Pro-Obama Tweets</div>
       <div class="contextcontainer tweetpadding">
         <div class="center tweetpadding context" id="obama0"> Loading tweet..</div>
         <div class="center tweetpadding context" id="obama1"> Loading tweet..</div>
@@ -175,7 +179,7 @@
         <div class="center tweetpadding context" id="obama4"> Loading tweet..</div>
      </div>
 
-      <div class="center tweetpadding sectionheader" id="proromneyheader"> Pro-Romney Tweets</div>
+      <div class="center romney tweetpadding sectionheader" id="proromneyheader"> Pro-Romney Tweets</div>
       <div class="contextcontainer tweetpadding">
         <div class="center tweetpadding context" id="romney0"> Loading tweet..</div>
         <div class="center tweetpadding context" id="romney1"> Loading tweet..</div>
@@ -184,7 +188,7 @@
         <div class="center tweetpadding context" id="romney4"> Loading tweet..</div>
      </div>
 
-      <div class="center tweetpadding sectionheader" id="neutralheader"> Neutral/Unclassified Tweets</div>
+      <div class="center none tweetpadding sectionheader" id="neutralheader"> Neutral/Unclassified Tweets</div>
       <div class="contextcontainer tweetpadding">
         <div class="center tweetpadding context" id="neutral0"> Loading tweet..</div>
         <div class="center tweetpadding context" id="neutral1"> Loading tweet..</div>
