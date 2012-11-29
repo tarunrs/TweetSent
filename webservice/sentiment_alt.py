@@ -113,13 +113,44 @@ class Sentiment():
     classified_tweets = self.classify_tweets(positive_tweets)
     obama_tweets = classified_tweets[0]
     romney_tweets = classified_tweets[1]
-    obama_tweets.sort(key=lambda tup: tup[0], reverse=True)
-    romney_tweets.sort(key=lambda tup: tup[0], reverse=True)
-    neutral_tweets.sort(key=lambda tup: tup[0], reverse=True)
+    obama_tweets.sort(key=lambda tup: tup[0])#, reverse=True)
+    romney_tweets.sort(key=lambda tup: tup[0])#, reverse=True)
+    neutral_tweets.sort(key=lambda tup: tup[0])#, reverse=True)
     ret = dict()
-    ret["obama"] = [(t[1].text, t[0]) for t in obama_tweets[-5:] ]
-    ret["romney"]= [(t[1].text, t[0]) for t in romney_tweets[-5:] ]
-    ret["neutral"] = [(t[1].text, t[0]) for t in neutral_tweets[-5:] ]
+    num_tweets = 5
+    ret["obama"]  = []
+    index = 0
+    cnt = 0
+    while cnt < num_tweets and index < len(obama_tweets):
+      if (obama_tweets[index][1].text, obama_tweets[index][0]) not in ret["obama"]:
+        ret["obama"].append((obama_tweets[index][1].text, obama_tweets[index][0]))
+        cnt += 1
+      index +=1
+
+    num_tweets = 5
+    ret["romney"]  = []
+    index = 0
+    cnt = 0
+    while cnt < num_tweets and index < len(romney_tweets):
+      if (romney_tweets[index][1].text, romney_tweets[index][0]) not in ret["romney"]:
+        ret["romney"].append((romney_tweets[index][1].text, romney_tweets[index][0]))
+        cnt += 1
+      index +=1
+
+    num_tweets = 5
+    ret["neutral"]  = []
+    index = 0
+    cnt = 0
+    while cnt < num_tweets and index < len(neutral_tweets):
+      if (neutral_tweets[index][1].text, neutral_tweets[index][0]) not in ret["neutral"]:
+        ret["neutral"].append((neutral_tweets[index][1].text, neutral_tweets[index][0]))
+        cnt += 1
+      index +=1
+
+
+#    ret["obama"] = [(t[1].text, t[0]) for t in obama_tweets[-5:] ]
+#    ret["romney"]= [(t[1].text, t[0]) for t in romney_tweets[-5:] ]
+#    ret["neutral"] = [(t[1].text, t[0]) for t in neutral_tweets[-5:] ]
     for censored_word in censored_words:
       ret['obama'] = [(t[0].lower().replace(censored_word, "*bleep*"), t[1]) for t in ret['obama'] ]
       ret['romney'] = [(t[0].lower().replace(censored_word, "*bleep*"), t[1]) for t in ret['romney'] ]
